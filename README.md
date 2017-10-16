@@ -12,7 +12,11 @@ Due to Oracle licensing, you must manually download the Oracle 12c binaries from
 
 Building
 --------
+Build the image:
+`docker build --force-rm=true --no-cache=true --shm-size=1G -t steveswinsburg/oracle12c-ee .`
 
+Run a container:
+``
 
 
 Connecting to Oracle
