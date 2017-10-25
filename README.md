@@ -8,7 +8,7 @@ Due to Oracle licensing, you must manually download the Oracle 12c binaries from
 
 1. Clone this repository
 1. Download the Oracle Database 12c binary `linuxx64_12201_database.zip` from http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html
-1. Put the zip in the `database` directory. Do not unzip it.
+1. Put the zip in the base directory. Do not unzip it.
 
 Building
 --------
