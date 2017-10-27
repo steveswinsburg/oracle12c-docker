@@ -15,7 +15,7 @@ Build the image:
 `docker build --force-rm=true --no-cache=true --shm-size=1G -t steveswinsburg/oracle12c-ee .`
 
 Run it:
-`docker run steveswinsburg/oracle12c-ee`
+`docker run -ti steveswinsburg/oracle12c-ee`
 
 On first run, the database will be provisioned. Using the command above will set defaults for everything. You will need to monitor the output to get the database password. If you wish to set your own password and SID, see the *Optional configuration* section below.
 Also, you must set the `-v` parameter if you want the database to be persisted over container recreation.
@@ -27,11 +27,12 @@ The default run command above will get you up and running but should be modified
 A more complete run command might look like:
 
 ```
-docker run --name steveswinsburg/oracle12c-ee \
--p 1521:1521 \
+docker run \
+-p 1521:1521 -p 5500:5500 \
 -e ORACLE_SID=orcl \
 -e ORACLE_PWD=password \
 -v /opt/oracle/oradata \
+-d \
 steveswinsburg/oracle12c-ee
 ```
 
@@ -39,7 +40,7 @@ steveswinsburg/oracle12c-ee
 ```
    --name:        The name of the container (default: auto generated)
    -p:            The port mapping of the host port to the container port.
-                  Two ports are exposed: 1521 (Oracle Listener)
+                  Two ports are exposed: 1521 (Oracle Listener), 5500 (OEM Express)
    -e ORACLE_SID: The Oracle Database SID that should be used (default: ORCLCDB)
    -e ORACLE_PWD: The Oracle Database SYS, SYSTEM and PDB_ADMIN password (default: auto generated)
    -e ORACLE_CHARACTERSET:
@@ -54,6 +55,7 @@ steveswinsburg/oracle12c-ee
    -v /opt/oracle/scripts/setup | /docker-entrypoint-initdb.d/setup
                   Optional: A volume with custom scripts to be run after database setup.
                   For further details see the "Running scripts after setup and on startup" section below.
+   -d:            Run in detached mode. You want this otherwise Ctrl-C will kill the container.
 ```
 
 Connecting to Oracle
