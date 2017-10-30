@@ -15,10 +15,10 @@ Build the image:
 `docker build --force-rm=true --no-cache=true --shm-size=1G -t steveswinsburg/oracle12c-ee .`
 
 Run it:
-`docker run -ti steveswinsburg/oracle12c-ee`
+`docker run steveswinsburg/oracle12c-ee`
 
 On first run, the database will be provisioned. Using the command above will set defaults for everything. You will need to monitor the output to get the database password. If you wish to set your own password and SID, see the *Optional configuration* section below.
-Also, you must set the `-v` parameter if you want the database to be persisted over container recreation.
+Also, you must set the `-v` parameter if you want the database to be persisted over container recreation. It will also shutdown if you kill the terminal process. So see below.
 
 Configuration
 -------------
