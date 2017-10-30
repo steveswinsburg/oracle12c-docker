@@ -18,23 +18,29 @@
 set -e
 
 # Check whether ORACLE_SID is passed on
-export ORACLE_SID=${1:-ORCLCDB}
+export ORACLE_SID=${ORACLE_SID:-ORCLCDB}
+echo "ORACLE_SID: $ORACLE_SID";
+
 
 # Check whether ORACLE_PDB is passed on
-export ORACLE_PDB=${2:-ORCLPDB1}
+export ORACLE_PDB=${ORACLE_PDB:-ORCLPDB1}
+echo "ORACLE_PDB: $ORACLE_PDB";
 
 # Auto generate ORACLE PWD if not passed on
-export ORACLE_PWD=${3:-"`openssl rand -base64 8`1"}
+export ORACLE_PWD=${ORACLE_PWD:-"`openssl rand -base64 8`1"}
 echo "ORACLE PASSWORD FOR SYS, SYSTEM AND PDBADMIN: $ORACLE_PWD";
 
 # Flag to create database as container database
-export ORACLE_CDB=${4:-false}
+export ORACLE_CDB=${ORACLE_CDB:-false}
+echo "ORACLE_CDB: $ORACLE_CDB";
 
 # Specify the number of pdb to be created (0 to 4094)
-export ORACLE_PDB_NUM=${5:-0}
+export ORACLE_PDB_NUM=${ORACLE_PDB_NUM:-0}
+echo "ORACLE_PDB_NUM: $ORACLE_PDB_NUM";
 
 # Total memory in MB to allocate to Oracle
-export ORACLE_MEM=${6:-2048}
+export ORACLE_MEM=${ORACLE_MEM:-2048}
+echo "ORACLE_MEM: $ORACLE_MEM";
 
 # Replace place holders in response file
 cp $ORACLE_BASE/$CONFIG_RSP $ORACLE_BASE/dbca.rsp
@@ -44,7 +50,6 @@ sed -i -e "s|###ORACLE_PWD###|$ORACLE_PWD|g" $ORACLE_BASE/dbca.rsp
 sed -i -e "s|###ORACLE_CHARACTERSET###|$ORACLE_CHARACTERSET|g" $ORACLE_BASE/dbca.rsp
 sed -i -e "s|###ORACLE_CDB###|$ORACLE_CDB|g" $ORACLE_BASE/dbca.rsp
 sed -i -e "s|###ORACLE_PDB_NUM###|$ORACLE_PDB_NUM|g" $ORACLE_BASE/dbca.rsp
-sed -i -e "s|###ORACLE_MEM###|$ORACLE_MEM|g" $ORACLE_BASE/dbca.rsp
 
 # If there is greater than 8 CPUs default back to dbca memory calculations
 # dbca will automatically pick 40% of available memory for Oracle DB
@@ -52,8 +57,11 @@ sed -i -e "s|###ORACLE_MEM###|$ORACLE_MEM|g" $ORACLE_BASE/dbca.rsp
 # However, bigger environment can and should use more of the available memory
 # This is due to Github Issue #307
 if [ `nproc` -gt 8 ]; then
-   sed -i -e "s|totalMemory=2048||g" $ORACLE_BASE/dbca.rsp
+  unset ORACLE_MEM
+  echo "Number of processors > 8, resetting Oracle memory to 40% of available memory";
 fi;
+sed -i -e "s|###ORACLE_MEM###|$ORACLE_MEM|g" $ORACLE_BASE/dbca.rsp
+
 
 # Create network related config files (sqlnet.ora, tnsnames.ora, listener.ora)
 mkdir -p $ORACLE_HOME/network/admin

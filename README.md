@@ -31,20 +31,20 @@ docker run \
 -p 1521:1521 -p 5500:5500 \
 -e ORACLE_SID=orcl \
 -e ORACLE_PWD=password \
+-e ORACLE_MEM=4000 \
 -v /opt/oracle/oradata \
 -d \
 steveswinsburg/oracle12c-ee
 ```
 
-**Parameters:**
+**Standard Parameters:**
 ```
    --name:        The name of the container (default: auto generated)
    -p:            The port mapping of the host port to the container port.
                   Two ports are exposed: 1521 (Oracle Listener), 5500 (OEM Express)
    -e ORACLE_SID: The Oracle Database SID that should be used (default: ORCLCDB)
    -e ORACLE_PWD: The Oracle Database SYS, SYSTEM and PDB_ADMIN password (default: auto generated)
-   -e ORACLE_CHARACTERSET:
-                  The character set to use when creating the database (default: AL32UTF8)
+   -e ORACLE_MEM: Total memory in MB to allocate to Oracle (default: 2048)
    -v /opt/oracle/oradata
                   The data volume to use for the database.
                   Has to be writable by the Unix "oracle" (uid: 54321) user inside the container!
@@ -57,6 +57,14 @@ steveswinsburg/oracle12c-ee
                   For further details see the "Running scripts after setup and on startup" section below.
    -d:            Run in detached mode. You want this otherwise Ctrl-C will kill the container.
 ```
+**Additional Parameters:**
+```
+   -e ORACLE_CHARACTERSET: The character set to use when creating the database (default: AL32UTF8)
+   -e ORACLE_CDB:          Flag to create database as container database (default: false)
+   -e ORACLE_PDB:          Specify the pdbname/pdbanme prefix if one or more pdb need to be created (default: None)
+   -e ORACLE_PDB_NUM:      If PDB enabled, specify the number of PDB to be created (default: 0)
+   -e ORACLE_MEM:          The amount of memory in MB to allocate to Oracle. If you bump this up too much you might need to change your Docker settings to allocate more memory to Docker (default: 2048)
+```
 
 Connecting to Oracle
 --------------------
@@ -65,3 +73,16 @@ Once the container has been started you can connect to it like any other databas
 `sqlplus sys/<your password>@//localhost:1521/<your SID> as sysdba`
 
 If you did not set the `ORACLE_PWD` parameter, check the docker run output for the password.
+
+Changing the password
+---------------------
+
+The password for the SYS account can be changed via the docker exec command. Note, the container has to be running:
+
+First run `docker ps` to get the container ID. Then run:
+`docker exec <container id> ./setPassword.sh <new password>`
+
+Getting a shell on the container
+--------------------------------
+First run `docker ps` to get the container ID. Then run:
+`docker exec <container id> /bin/bash`
