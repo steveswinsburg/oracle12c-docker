@@ -44,7 +44,6 @@ steveswinsburg/oracle12c-ee
                   Two ports are exposed: 1521 (Oracle Listener), 5500 (OEM Express)
    -e ORACLE_SID: The Oracle Database SID that should be used (default: ORCLCDB)
    -e ORACLE_PWD: The Oracle Database SYS, SYSTEM and PDB_ADMIN password (default: auto generated)
-   -e ORACLE_MEM: Total memory in MB to allocate to Oracle (default: 2048)
    -v /opt/oracle/oradata
                   The data volume to use for the database.
                   Has to be writable by the Unix "oracle" (uid: 54321) user inside the container!
@@ -85,4 +84,4 @@ First run `docker ps` to get the container ID. Then run:
 Getting a shell on the container
 --------------------------------
 First run `docker ps` to get the container ID. Then run:
-`docker exec <container id> /bin/bash`
+`docker exec -it <container id> /bin/bash`
